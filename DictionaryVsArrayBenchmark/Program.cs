@@ -94,7 +94,7 @@ public class FindOneBenchmark
 
     public FindOneBenchmark()
     {
-        words = Common.ReadWords().Take(128).ToArray();
+        words = Common.ReadWords().Take(16).ToArray();
 
         foreach (var word in words)
         {
@@ -112,9 +112,9 @@ public class FindOneBenchmark
 
     public IEnumerable<Needle> Needles => new[]
     {
-        new Needle("from beginning", words.First(w => w.Length >= 5)),
-        new Needle("from middle", words.Skip(words.Length / 2).First(w => w.Length >= 5)),
-        new Needle("from end", words.Last(w => w.Length >= 5)),
+        new Needle("from beginning", words.First()),
+        new Needle("from middle", words[words.Length / 2]),
+        new Needle("from end", words.Last()),
     };
 
     [Benchmark]
@@ -153,7 +153,7 @@ public class FindAllBenchmark
 
     public FindAllBenchmark()
     {
-        words = Common.ReadWords().Take(128).ToArray();
+        words = Common.ReadWords().Take(16).ToArray();
         shuffledWords = words.ToArray();
         Shuffle(32, shuffledWords);
 
