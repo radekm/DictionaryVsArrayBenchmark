@@ -81,6 +81,17 @@ public class ConstructBenchmark
         }
         return result;
     }
+
+    [Benchmark]
+    public CritBitTree<int> MakeCritBitTree()
+    {
+        CritBitTree<int> result = new();
+        foreach (var word in words.Take(N))
+        {
+            result.Add(word, word.Length);
+        }
+        return result;
+    }
 }
 
 public class FindOneBenchmark
@@ -91,6 +102,7 @@ public class FindOneBenchmark
     private readonly ArrayWithHashes<int> arrWithHashes = new();
     private readonly ArrayWithHashesAvx2<int> arrWithHashesAvx2 = new();
     private readonly LinkedArraysWithHashes<int> linkedArrsWithHashes = new();
+    private readonly CritBitTree<int> critBitTree = new();
 
     public FindOneBenchmark()
     {
@@ -104,6 +116,7 @@ public class FindOneBenchmark
             arrWithHashes.Add(word, value);
             arrWithHashesAvx2.Add(word, value);
             linkedArrsWithHashes.Add(word, value);
+            critBitTree.Add(word, value);
         }
     }
 
@@ -128,6 +141,8 @@ public class FindOneBenchmark
     public int ArrayWithHashesAvx2() => arrWithHashesAvx2.Find(Needle.Word);
     [Benchmark]
     public int LinkedArraysWithHashes() => linkedArrsWithHashes.Find(Needle.Word);
+    [Benchmark]
+    public int CritBitTree() => critBitTree.Find(Needle.Word);
 }
 
 public class FindAllBenchmark
@@ -139,6 +154,7 @@ public class FindAllBenchmark
     private readonly ArrayWithHashes<int> arrWithHashes = new();
     private readonly ArrayWithHashesAvx2<int> arrWithHashesAvx2 = new();
     private readonly LinkedArraysWithHashes<int> linkedArrsWithHashes = new();
+    private readonly CritBitTree<int> critBitTree = new();
 
     public static void Shuffle<T>(int seed, T[] array)
     {
@@ -165,6 +181,7 @@ public class FindAllBenchmark
             arrWithHashes.Add(word, value);
             arrWithHashesAvx2.Add(word, value);
             linkedArrsWithHashes.Add(word, value);
+            critBitTree.Add(word, value);
         }
     }
 
@@ -220,6 +237,17 @@ public class FindAllBenchmark
         foreach (var word in shuffledWords)
         {
             result += linkedArrsWithHashes.Find(word);
+        }
+        return result;
+    }
+
+    [Benchmark]
+    public int CritBitTree()
+    {
+        var result = 0;
+        foreach (var word in shuffledWords)
+        {
+            result += critBitTree.Find(word);
         }
         return result;
     }
